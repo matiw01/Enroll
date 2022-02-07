@@ -84,6 +84,15 @@ where:
 
 The last four lines (objective components) will be useful for the grader script to check if your model calculates them correctly.
 
+## Technology
+Our solution to group-enroll problem is mainly based on [MiniZinc](https://www.minizinc.org/) models. You can get more info about MiniZinc language [here](https://www.minizinc.org/doc-2.5.5/en/index.html). MiniZinc solver chosen by us to solve the problem is [Gurobi](https://www.gurobi.com/downloads/?campaignid=2027425882&adgroupid=77414946611&creative=355014679679&keyword=gurobi&matchtype=e&gclid=CjwKCAiAo4OQBhBBEiwA5KWu_8Q3yuoY2KddNRST8tGpDuDmLRidW1F55EsN7GOFf-ro_zLfoE-WcxoCOaYQAvD_BwE).  We also use python minizinc library for starting and reruning models to get better solution. You can get some more info abut it [here](https://minizinc-python.readthedocs.io/en/latest/getting_started.html).
+
+To install python minizinc library just enter ```pip install minizinc[dzn]``` in the console
+
+## Solution
+Problem is solved in two steps. First much faster one is looking for any solution fullfiling constraints stated by the problem. For it to be done we made **enroll_satisfy** model. Getting competition.dzn or any other dzn file with appropriate data it returns first solution meeting constraints. Second more time consuming step is improving the solution using [Large Neighborhood Search](https://arxiv.org/abs/2107.10201#:~:text=Large%20Neighborhood%20Search%20(LNS)%20is,neighborhood%20around%20the%20current%20assignment.). It is done in python **relaxModel**.
+What it does is basicly chose certain days, students and classes which are given to model as variables. Those days, students and classes which haven't been chosen are given to model as constants. This way you can decide when to stop calculating and be sure that you have a solution. 
+
 ## Parameters Explained
 
 [^group]: `Group` is a set containing unique identifiers of groups.
@@ -107,3 +116,4 @@ The last four lines (objective components) will be useful for the grader script 
 [^student_prefers]: `student_prefers` matrix contains prefences[^preference] student[^student] assigns to various groups[^group]. If all the groups of the given class have assigned the lowest preference it means that student doesn't attend this class.
 [^break_to_disappointment_multiplier]: `break_to_disappointment_multiplier` is a weight associated with the "long breaks" objective component.
 [^late_to_disappointment_multiplier]: `late_to_disappointment_multiplier` is a weight associated with the "being late" objective component.
+
